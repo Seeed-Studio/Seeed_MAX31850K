@@ -1,0 +1,26 @@
+  
+#######################################
+# Syntax Coloring Map For Grove temerature sensor MAX31850
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+KEYWORD1    OneWire
+KEYWORD1    DallasTemperature
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+KEYWORD2    begin
+KEYWORD2    getDeviceCount
+KEYWORD2    getAddress
+KEYWORD2    requestTemperatures
+KEYWORD2    getDeviceCount
+KEYWORD2    getResolution
+KEYWORD2    toFahrenheit
+KEYWORD2    getTempC
+
+#######################################
+# Constants (LITERAL1)
+#######################################
