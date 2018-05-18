@@ -16,19 +16,20 @@ ranging from -200NC to +700NC.
 Before using:
 ==============
 The communication of module is base on one-wire,Sopports two use modes:  
-> single mode(one host and one slave)  
-> multiple mode(one host and multiple slaves,base on rom addressing-one wire search algorithm.This is more complex and subtle than IIC addressing.).  
+>* single mode(one host and one slave)  
+>* multiple mode(one host and multiple slaves,base on rom addressing-one wire search algorithm.This is more complex and subtle than IIC addressing.).  
 
 Usage:
 ==========  
 Download all the source files.
 There are two examples for user to use.
-> **example/Single/Single.ino**,single mode.
-> **example/Multiple/Multiple.ino**,multiple mode,Use this demo when two or more modules attach to host arduino board.It also can be used in the situation that only attach one module.But we don't recommend such operation,Cause it will reduce the operating efficiency of the program.  
+>* **example/Single/Single.ino**,single mode.  
+>* **example/Multiple/Multiple.ino**,multiple mode,Use this demo when two or more modules attach to host arduino board.It also can be used in the situation that only attach one module.But we don't recommend such operation,Cause it will reduce the operating efficiency of the program.  
 
 Extended:
 ------------
-[One-wire search algorithm](https://www.maximintegrated.com/cn/app-notes/index.mvp/id/187) for chinese.
+[One-wire search algorithm](https://www.maximintegrated.com/cn/app-notes/index.mvp/id/187) for chinese.  
+
 [One-wire search algorithm](http://www.sal.wisc.edu/PFIS/docs/rss-nir/archive/public/Product%20Manuals/maxim-ic/AN187.pdf) for english.
 
 Read the source code and refer to manual Simultaneously.This algorithm is worth a look if you are a software lovers.
@@ -42,7 +43,7 @@ Refer to the **/doc** to get more detail.
 
 declaration:
 =====
-This most part of arduino library is based on Dallas [temperature library](https://github.com/tomdeboer/SparkCoreDallasTemperature).
+This most part of arduino library is based on [Dallas temperature library](https://github.com/tomdeboer/SparkCoreDallasTemperature).
 
 
 
