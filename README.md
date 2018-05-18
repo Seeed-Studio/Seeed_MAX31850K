@@ -17,12 +17,13 @@ Before using:
 ==============
 The communication of module is base on one-wire,Sopports two use modes:  
 >* single mode(one host and one slave)  
->* multiple mode(one host and multiple slaves,base on rom addressing-one wire search algorithm.This is more complex and subtle than IIC addressing.).  
+>* multiple mode(one host and multiple slaves,base on rom addressing-one wire search algorithm.This is more complex and subtle than IIC addressing.).**In multiple mode ,you can change the address of the module by changing the Pad connection method on the back of board,default is all to low.**
 
 Usage:
 ==========  
 Download all the source files.
 Attach the type K Thermocouple to the module port.
+Note that the **one-wire pin is D3**.
 There are two examples for user to use.
 >* **example/Single/Single.ino**,single mode.  
 >* **example/Multiple/Multiple.ino**,multiple mode,Use this demo when two or more modules attach to host arduino board.It also can be used in the situation that only attach one module.But we don't recommend such operation,Cause it will reduce the operating efficiency of the program.  
