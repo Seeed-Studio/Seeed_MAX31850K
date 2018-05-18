@@ -22,6 +22,7 @@ The communication of module is base on one-wire,Sopports two use modes:
 Usage:
 ==========  
 Download all the source files.
+Attach the type K Thermocouple to the module port.
 There are two examples for user to use.
 >* **example/Single/Single.ino**,single mode.  
 >* **example/Multiple/Multiple.ino**,multiple mode,Use this demo when two or more modules attach to host arduino board.It also can be used in the situation that only attach one module.But we don't recommend such operation,Cause it will reduce the operating efficiency of the program.  
