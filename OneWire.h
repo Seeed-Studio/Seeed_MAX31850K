@@ -6,14 +6,14 @@
 #include <stdint.h>
 
 #if defined(__AVR__)
-#include <util/crc16.h>
+    #include <util/crc16.h>
 #endif
 
 #if ARDUINO >= 100
-#include <Arduino.h>       // for delayMicroseconds, digitalPinToBitMask, etc
+    #include <Arduino.h>       // for delayMicroseconds, digitalPinToBitMask, etc
 #else
-#include "WProgram.h"      // for delayMicroseconds
-#include "pins_arduino.h"  // for digitalPinToBitMask, etc
+    #include "WProgram.h"      // for delayMicroseconds
+    #include "pins_arduino.h"  // for digitalPinToBitMask, etc
 #endif
 
 // You can exclude certain features from OneWire.  In theory, this
@@ -28,12 +28,12 @@
 
 // you can exclude onewire_search by defining that to 0
 #ifndef ONEWIRE_SEARCH
-#define ONEWIRE_SEARCH 1
+    #define ONEWIRE_SEARCH 1
 #endif
 
 // You can exclude CRC checks altogether by defining this to 0
 #ifndef ONEWIRE_CRC
-#define ONEWIRE_CRC 1
+    #define ONEWIRE_CRC 1
 #endif
 
 // Select the table-lookup method of computing the 8-bit CRC
@@ -42,34 +42,35 @@
 // old versions of OneWire).  If you disable this, a slower
 // but very compact algorithm is used.
 #ifndef ONEWIRE_CRC8_TABLE
-#define ONEWIRE_CRC8_TABLE 1
+    #define ONEWIRE_CRC8_TABLE 1
 #endif
 
 // You can allow 16-bit CRC checks by defining this to 1
 // (Note that ONEWIRE_CRC must also be 1.)
 #ifndef ONEWIRE_CRC16
-#define ONEWIRE_CRC16 1
+    #define ONEWIRE_CRC16 1
 #endif
 
 // Board-specific macros for direct GPIO
 #include "util/OneWire_direct_regtype.h"
 
-class OneWire
-{
+class OneWire {
   private:
     IO_REG_TYPE bitmask;
-    volatile IO_REG_TYPE *baseReg;
+    volatile IO_REG_TYPE* baseReg;
 
-#if ONEWIRE_SEARCH
+    #if ONEWIRE_SEARCH
     // global search state
     unsigned char ROM_NO[8];
     uint8_t LastDiscrepancy;
     uint8_t LastFamilyDiscrepancy;
     bool LastDeviceFlag;
-#endif
+    #endif
 
   public:
-    OneWire(uint8_t pin) { begin(pin); }
+    OneWire(uint8_t pin) {
+        begin(pin);
+    }
     void begin(uint8_t pin);
 
     // Perform a 1-Wire reset cycle. Returns 1 if a device responds
@@ -89,12 +90,12 @@ class OneWire
     // another read or write.
     void write(uint8_t v, uint8_t power = 0);
 
-    void write_bytes(const uint8_t *buf, uint16_t count, bool power = 0);
+    void write_bytes(const uint8_t* buf, uint16_t count, bool power = 0);
 
     // Read a byte.
     uint8_t read(void);
 
-    void read_bytes(uint8_t *buf, uint16_t count);
+    void read_bytes(uint8_t* buf, uint16_t count);
 
     // Write a bit. The bus is always left powered at the end, see
     // note in write() about that.
@@ -110,7 +111,7 @@ class OneWire
     // someone shorts your bus.
     void depower(void);
 
-#if ONEWIRE_SEARCH
+    #if ONEWIRE_SEARCH
     // Clear the search state so that if will start from the beginning again.
     void reset_search();
 
@@ -124,15 +125,15 @@ class OneWire
     // might be a good idea to check the CRC to make sure you didn't
     // get garbage.  The order is deterministic. You will always get
     // the same devices in the same order.
-    bool search(uint8_t *newAddr, bool search_mode = true);
-#endif
+    bool search(uint8_t* newAddr, bool search_mode = true);
+    #endif
 
-#if ONEWIRE_CRC
+    #if ONEWIRE_CRC
     // Compute a Dallas Semiconductor 8 bit CRC, these are used in the
     // ROM and scratchpad registers.
-    static uint8_t crc8(const uint8_t *addr, uint8_t len);
+    static uint8_t crc8(const uint8_t* addr, uint8_t len);
 
-#if ONEWIRE_CRC16
+    #if ONEWIRE_CRC16
     // Compute the 1-Wire CRC16 and compare it against the received CRC.
     // Example usage (reading a DS2408):
     //    // Put everything in a buffer so we can compute the CRC easily.
@@ -144,8 +145,8 @@ class OneWire
     //    ReadBytes(net, buf+3, 10);  // Read 6 data bytes, 2 0xFF, 2 CRC16
     //    if (!CheckCRC16(buf, 11, &buf[11])) {
     //        // Handle error.
-    //    }     
-    //          
+    //    }
+    //
     // @param input - Array of bytes to checksum.
     // @param len - How many bytes to use.
     // @param inverted_crc - The two CRC16 bytes in the received data.
@@ -168,13 +169,13 @@ class OneWire
     // @param crc - The crc starting value (optional)
     // @return The CRC16, as defined by Dallas Semiconductor.
     static uint16_t crc16(const uint8_t* input, uint16_t len, uint16_t crc = 0);
-#endif
-#endif
+    #endif
+    #endif
 };
 
 // Prevent this name from leaking into Arduino sketches
 #ifdef IO_REG_TYPE
-#undef IO_REG_TYPE
+    #undef IO_REG_TYPE
 #endif
 
 #endif // __cplusplus

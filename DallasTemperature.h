@@ -10,12 +10,12 @@
 
 // set to true to include code for new and delete operators
 #ifndef REQUIRESNEW
-#define REQUIRESNEW false
+    #define REQUIRESNEW false
 #endif
 
 // set to true to include code implementing alarm search functions
 #ifndef REQUIRESALARMS
-#define REQUIRESALARMS true
+    #define REQUIRESALARMS true
 #endif
 
 #include <inttypes.h>
@@ -58,186 +58,185 @@
 
 typedef uint8_t DeviceAddress[8];
 
-class DallasTemperature
-{
+class DallasTemperature {
   public:
 
-  DallasTemperature(OneWire*);
+    DallasTemperature(OneWire*);
 
-  // initalise bus
-  void begin(void);
+    // initalise bus
+    void begin(void);
 
-  // returns the number of devices found on the bus
-  uint8_t getDeviceCount(void);
-  
-  // Is a conversion complete on the wire?
-  bool isConversionComplete(void);
-  
-  // returns true if address is valid
-  bool validAddress(uint8_t*);
+    // returns the number of devices found on the bus
+    uint8_t getDeviceCount(void);
 
-  // finds an address at a given index on the bus 
-  bool getAddress(uint8_t*, const uint8_t);
-  
-  // attempt to determine if the device at the given address is connected to the bus
-  bool isConnected(uint8_t*);
+    // Is a conversion complete on the wire?
+    bool isConversionComplete(void);
 
-  // attempt to determine if the device at the given address is connected to the bus
-  // also allows for updating the read scratchpad
-  bool isConnected(uint8_t*, uint8_t*);
+    // returns true if address is valid
+    bool validAddress(uint8_t*);
 
-  // read device's scratchpad
-  void readScratchPad(uint8_t*, uint8_t*);
+    // finds an address at a given index on the bus
+    bool getAddress(uint8_t*, const uint8_t);
 
-  // write device's scratchpad
-  void writeScratchPad(uint8_t*, const uint8_t*);
+    // attempt to determine if the device at the given address is connected to the bus
+    bool isConnected(uint8_t*);
 
-  // read device's power requirements
-  bool readPowerSupply(uint8_t*);
+    // attempt to determine if the device at the given address is connected to the bus
+    // also allows for updating the read scratchpad
+    bool isConnected(uint8_t*, uint8_t*);
 
-  // get global resolution
-  uint8_t getResolution();
-  
-  // set global resolution to 9, 10, 11, or 12 bits
-  void setResolution(uint8_t);
+    // read device's scratchpad
+    void readScratchPad(uint8_t*, uint8_t*);
 
-  // returns the device resolution, 9-12
-  uint8_t getResolution(uint8_t*);
+    // write device's scratchpad
+    void writeScratchPad(uint8_t*, const uint8_t*);
 
-  // set resolution of a device to 9, 10, 11, or 12 bits
-  bool setResolution(uint8_t*, uint8_t);
-  
-  // sets/gets the waitForConversion flag
-  void setWaitForConversion(bool);
-  bool getWaitForConversion(void);
-  
-  // sets/gets the checkForConversion flag
-  void setCheckForConversion(bool);
-  bool getCheckForConversion(void);
-  
-  // sends command for all devices on the bus to perform a temperature conversion 
-  void requestTemperatures(void);
-   
-  // sends command for one device to perform a temperature conversion by address
-  bool requestTemperaturesByAddress(uint8_t*);
+    // read device's power requirements
+    bool readPowerSupply(uint8_t*);
 
-  // sends command for one device to perform a temperature conversion by index
-  bool requestTemperaturesByIndex(uint8_t);
+    // get global resolution
+    uint8_t getResolution();
 
-  // returns temperature in degrees C
-  float getTempC(uint8_t*);
+    // set global resolution to 9, 10, 11, or 12 bits
+    void setResolution(uint8_t);
 
-  // returns temperature in degrees F
-  float getTempF(uint8_t*);
+    // returns the device resolution, 9-12
+    uint8_t getResolution(uint8_t*);
 
-  // Get temperature for device index (slow)
-  float getTempCByIndex(uint8_t);
-  
-  // Get temperature for device index (slow)
-  float getTempFByIndex(uint8_t);
-  
-  // returns true if the bus requires parasite power
-  bool isParasitePowerMode(void);
-  
-  bool isConversionAvailable(uint8_t*);
+    // set resolution of a device to 9, 10, 11, or 12 bits
+    bool setResolution(uint8_t*, uint8_t);
 
-  #if REQUIRESALARMS
-  
-  typedef void AlarmHandler(uint8_t*);
+    // sets/gets the waitForConversion flag
+    void setWaitForConversion(bool);
+    bool getWaitForConversion(void);
 
-  // sets the high alarm temperature for a device
-  // accepts a char.  valid range is -55C - 125C
-  void setHighAlarmTemp(uint8_t*, const char);
+    // sets/gets the checkForConversion flag
+    void setCheckForConversion(bool);
+    bool getCheckForConversion(void);
 
-  // sets the low alarm temperature for a device
-  // accepts a char.  valid range is -55C - 125C
-  void setLowAlarmTemp(uint8_t*, const char);
+    // sends command for all devices on the bus to perform a temperature conversion
+    void requestTemperatures(void);
 
-  // returns a signed char with the current high alarm temperature for a device
-  // in the range -55C - 125C
-  char getHighAlarmTemp(uint8_t*);
+    // sends command for one device to perform a temperature conversion by address
+    bool requestTemperaturesByAddress(uint8_t*);
 
-  // returns a signed char with the current low alarm temperature for a device
-  // in the range -55C - 125C
-  char getLowAlarmTemp(uint8_t*);
-  
-  // resets internal variables used for the alarm search
-  void resetAlarmSearch(void);
+    // sends command for one device to perform a temperature conversion by index
+    bool requestTemperaturesByIndex(uint8_t);
 
-  // search the wire for devices with active alarms
-  bool alarmSearch(uint8_t*);
+    // returns temperature in degrees C
+    float getTempC(uint8_t*);
 
-  // returns true if ia specific device has an alarm
-  bool hasAlarm(uint8_t*);
+    // returns temperature in degrees F
+    float getTempF(uint8_t*);
 
-  // returns true if any device is reporting an alarm on the bus
-  bool hasAlarm(void);
+    // Get temperature for device index (slow)
+    float getTempCByIndex(uint8_t);
 
-  // runs the alarm handler for all devices returned by alarmSearch()
-  void processAlarms(void);
-  
-  // sets the alarm handler
-  void setAlarmHandler(AlarmHandler *);
-  
-  // The default alarm handler
-  static void defaultAlarmHandler(uint8_t*);
+    // Get temperature for device index (slow)
+    float getTempFByIndex(uint8_t);
 
-  #endif
+    // returns true if the bus requires parasite power
+    bool isParasitePowerMode(void);
 
-  // convert from celcius to farenheit
-  static float toFahrenheit(const float);
+    bool isConversionAvailable(uint8_t*);
 
-  // convert from farenheit to celsius
-  static float toCelsius(const float);
+    #if REQUIRESALARMS
 
-  #if REQUIRESNEW
+    typedef void AlarmHandler(uint8_t*);
 
-  // initalize memory area
-  void* operator new (unsigned int);
+    // sets the high alarm temperature for a device
+    // accepts a char.  valid range is -55C - 125C
+    void setHighAlarmTemp(uint8_t*, const char);
 
-  // delete memory reference
-  void operator delete(void*);
-  
-  #endif
+    // sets the low alarm temperature for a device
+    // accepts a char.  valid range is -55C - 125C
+    void setLowAlarmTemp(uint8_t*, const char);
+
+    // returns a signed char with the current high alarm temperature for a device
+    // in the range -55C - 125C
+    char getHighAlarmTemp(uint8_t*);
+
+    // returns a signed char with the current low alarm temperature for a device
+    // in the range -55C - 125C
+    char getLowAlarmTemp(uint8_t*);
+
+    // resets internal variables used for the alarm search
+    void resetAlarmSearch(void);
+
+    // search the wire for devices with active alarms
+    bool alarmSearch(uint8_t*);
+
+    // returns true if ia specific device has an alarm
+    bool hasAlarm(uint8_t*);
+
+    // returns true if any device is reporting an alarm on the bus
+    bool hasAlarm(void);
+
+    // runs the alarm handler for all devices returned by alarmSearch()
+    void processAlarms(void);
+
+    // sets the alarm handler
+    void setAlarmHandler(AlarmHandler*);
+
+    // The default alarm handler
+    static void defaultAlarmHandler(uint8_t*);
+
+    #endif
+
+    // convert from celcius to farenheit
+    static float toFahrenheit(const float);
+
+    // convert from farenheit to celsius
+    static float toCelsius(const float);
+
+    #if REQUIRESNEW
+
+    // initalize memory area
+    void* operator new (unsigned int);
+
+    // delete memory reference
+    void operator delete (void*);
+
+    #endif
 
   private:
-  typedef uint8_t ScratchPad[9];
-  
-  // parasite power on or off
-  bool parasite;
+    typedef uint8_t ScratchPad[9];
 
-  // used to determine the delay amount needed to allow for the
-  // temperature conversion to take place
-  uint8_t bitResolution;
-  
-  // used to requestTemperature with or without delay
-  bool waitForConversion;
-  
-  // used to requestTemperature to dynamically check if a conversion is complete
-  bool checkForConversion;
-  
-  // count of devices on the bus
-  uint8_t devices;
-  
-  // Take a pointer to one wire instance
-  OneWire* _wire;
+    // parasite power on or off
+    bool parasite;
 
-  // reads scratchpad and returns the temperature in degrees C
-  float calculateTemperature(uint8_t*, uint8_t*);
-  
-  void	blockTillConversionComplete(uint8_t*,uint8_t*);
-  
-  #if REQUIRESALARMS
+    // used to determine the delay amount needed to allow for the
+    // temperature conversion to take place
+    uint8_t bitResolution;
 
-  // required for alarmSearch 
-  uint8_t alarmSearchAddress[8];
-  char alarmSearchJunction;
-  uint8_t alarmSearchExhausted;
+    // used to requestTemperature with or without delay
+    bool waitForConversion;
 
-  // the alarm handler function pointer
-  AlarmHandler *_AlarmHandler;
+    // used to requestTemperature to dynamically check if a conversion is complete
+    bool checkForConversion;
 
-  #endif
-  
+    // count of devices on the bus
+    uint8_t devices;
+
+    // Take a pointer to one wire instance
+    OneWire* _wire;
+
+    // reads scratchpad and returns the temperature in degrees C
+    float calculateTemperature(uint8_t*, uint8_t*);
+
+    void	blockTillConversionComplete(uint8_t*, uint8_t*);
+
+    #if REQUIRESALARMS
+
+    // required for alarmSearch
+    uint8_t alarmSearchAddress[8];
+    char alarmSearchJunction;
+    uint8_t alarmSearchExhausted;
+
+    // the alarm handler function pointer
+    AlarmHandler* _AlarmHandler;
+
+    #endif
+
 };
 #endif

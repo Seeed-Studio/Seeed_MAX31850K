@@ -61,10 +61,10 @@
 #define DIRECT_WRITE_LOW(base, mask)    ((*((base)+13)) = (mask))
 #define DIRECT_WRITE_HIGH(base, mask)   ((*((base)+12)) = (mask))
 #ifndef PROGMEM
-#define PROGMEM
+    #define PROGMEM
 #endif
 #ifndef pgm_read_byte
-#define pgm_read_byte(addr) (*(const uint8_t *)(addr))
+    #define pgm_read_byte(addr) (*(const uint8_t *)(addr))
 #endif
 
 #elif defined(__PIC32MX__)
@@ -105,51 +105,49 @@
 #define IO_REG_MASK_ATTR
 
 static inline __attribute__((always_inline))
-IO_REG_TYPE directRead(IO_REG_TYPE pin)
-{
-    if ( pin < 32 )
+IO_REG_TYPE directRead(IO_REG_TYPE pin) {
+    if (pin < 32) {
         return (GPIO.in >> pin) & 0x1;
-    else if ( pin < 40 )
+    } else if (pin < 40) {
         return (GPIO.in1.val >> (pin - 32)) & 0x1;
+    }
 
     return 0;
 }
 
 static inline __attribute__((always_inline))
-void directWriteLow(IO_REG_TYPE pin)
-{
-    if ( pin < 32 )
+void directWriteLow(IO_REG_TYPE pin) {
+    if (pin < 32) {
         GPIO.out_w1tc = ((uint32_t)1 << pin);
-    else if ( pin < 34 )
+    } else if (pin < 34) {
         GPIO.out1_w1tc.val = ((uint32_t)1 << (pin - 32));
+    }
 }
 
 static inline __attribute__((always_inline))
-void directWriteHigh(IO_REG_TYPE pin)
-{
-    if ( pin < 32 )
+void directWriteHigh(IO_REG_TYPE pin) {
+    if (pin < 32) {
         GPIO.out_w1ts = ((uint32_t)1 << pin);
-    else if ( pin < 34 )
+    } else if (pin < 34) {
         GPIO.out1_w1ts.val = ((uint32_t)1 << (pin - 32));
+    }
 }
 
 static inline __attribute__((always_inline))
-void directModeInput(IO_REG_TYPE pin)
-{
-    if ( digitalPinIsValid(pin) )
-    {
+void directModeInput(IO_REG_TYPE pin) {
+    if (digitalPinIsValid(pin)) {
         uint32_t rtc_reg(rtc_gpio_desc[pin].reg);
 
-        if ( rtc_reg ) // RTC pins PULL settings
-        {
+        if (rtc_reg) { // RTC pins PULL settings
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].mux);
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].pullup | rtc_gpio_desc[pin].pulldown);
         }
 
-        if ( pin < 32 )
+        if (pin < 32) {
             GPIO.enable_w1tc = ((uint32_t)1 << pin);
-        else
+        } else {
             GPIO.enable1_w1tc.val = ((uint32_t)1 << (pin - 32));
+        }
 
         uint32_t pinFunction((uint32_t)2 << FUN_DRV_S); // what are the drivers?
         pinFunction |= FUN_IE; // input enable but required for output as well?
@@ -162,22 +160,20 @@ void directModeInput(IO_REG_TYPE pin)
 }
 
 static inline __attribute__((always_inline))
-void directModeOutput(IO_REG_TYPE pin)
-{
-    if ( digitalPinIsValid(pin) && pin <= 33 ) // pins above 33 can be only inputs
-    {
+void directModeOutput(IO_REG_TYPE pin) {
+    if (digitalPinIsValid(pin) && pin <= 33) { // pins above 33 can be only inputs
         uint32_t rtc_reg(rtc_gpio_desc[pin].reg);
 
-        if ( rtc_reg ) // RTC pins PULL settings
-        {
+        if (rtc_reg) { // RTC pins PULL settings
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].mux);
             ESP_REG(rtc_reg) = ESP_REG(rtc_reg) & ~(rtc_gpio_desc[pin].pullup | rtc_gpio_desc[pin].pulldown);
         }
 
-        if ( pin < 32 )
+        if (pin < 32) {
             GPIO.enable_w1ts = ((uint32_t)1 << pin);
-        else // already validated to pins <= 33
+        } else { // already validated to pins <= 33
             GPIO.enable1_w1ts.val = ((uint32_t)1 << (pin - 32));
+        }
 
         uint32_t pinFunction((uint32_t)2 << FUN_DRV_S); // what are the drivers?
         pinFunction |= FUN_IE; // input enable but required for output as well?
@@ -197,10 +193,10 @@ void directModeOutput(IO_REG_TYPE pin)
 // https://github.com/PaulStoffregen/OneWire/pull/47
 // https://github.com/stickbreaker/OneWire/commit/6eb7fc1c11a15b6ac8c60e5671cf36eb6829f82c
 #ifdef  interrupts
-#undef  interrupts
+    #undef  interrupts
 #endif
 #ifdef  noInterrupts
-#undef  noInterrupts
+    #undef  noInterrupts
 #endif
 #define noInterrupts() {portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;portENTER_CRITICAL(&mux)
 #define interrupts() portEXIT_CRITICAL(&mux);}
@@ -252,8 +248,7 @@ void directModeOutput(IO_REG_TYPE pin)
 #define IO_REG_MASK_ATTR
 
 static inline __attribute__((always_inline))
-IO_REG_TYPE directRead(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
-{
+IO_REG_TYPE directRead(volatile IO_REG_TYPE* base, IO_REG_TYPE pin) {
     IO_REG_TYPE ret;
     if (SS_GPIO == GPIO_TYPE(pin)) {
         ret = READ_ARC_REG(((IO_REG_TYPE)base + EXT_PORT_OFFSET_SS));
@@ -264,30 +259,27 @@ IO_REG_TYPE directRead(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
 }
 
 static inline __attribute__((always_inline))
-void directModeInput(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
-{
+void directModeInput(volatile IO_REG_TYPE* base, IO_REG_TYPE pin) {
     if (SS_GPIO == GPIO_TYPE(pin)) {
         WRITE_ARC_REG(READ_ARC_REG((((IO_REG_TYPE)base) + DIR_OFFSET_SS)) & ~(0x01 << GPIO_ID(pin)),
-			((IO_REG_TYPE)(base) + DIR_OFFSET_SS));
+                      ((IO_REG_TYPE)(base) + DIR_OFFSET_SS));
     } else {
         MMIO_REG_VAL_FROM_BASE((IO_REG_TYPE)base, DIR_OFFSET_SOC) &= ~(0x01 << GPIO_ID(pin));
     }
 }
 
 static inline __attribute__((always_inline))
-void directModeOutput(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
-{
+void directModeOutput(volatile IO_REG_TYPE* base, IO_REG_TYPE pin) {
     if (SS_GPIO == GPIO_TYPE(pin)) {
         WRITE_ARC_REG(READ_ARC_REG(((IO_REG_TYPE)(base) + DIR_OFFSET_SS)) | (0x01 << GPIO_ID(pin)),
-			((IO_REG_TYPE)(base) + DIR_OFFSET_SS));
+                      ((IO_REG_TYPE)(base) + DIR_OFFSET_SS));
     } else {
         MMIO_REG_VAL_FROM_BASE((IO_REG_TYPE)base, DIR_OFFSET_SOC) |= (0x01 << GPIO_ID(pin));
     }
 }
 
 static inline __attribute__((always_inline))
-void directWriteLow(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
-{
+void directWriteLow(volatile IO_REG_TYPE* base, IO_REG_TYPE pin) {
     if (SS_GPIO == GPIO_TYPE(pin)) {
         WRITE_ARC_REG(READ_ARC_REG(base) & ~(0x01 << GPIO_ID(pin)), base);
     } else {
@@ -296,8 +288,7 @@ void directWriteLow(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
 }
 
 static inline __attribute__((always_inline))
-void directWriteHigh(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
-{
+void directWriteHigh(volatile IO_REG_TYPE* base, IO_REG_TYPE pin) {
     if (SS_GPIO == GPIO_TYPE(pin)) {
         WRITE_ARC_REG(READ_ARC_REG(base) | (0x01 << GPIO_ID(pin)), base);
     } else {
@@ -314,12 +305,12 @@ void directWriteHigh(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
 #elif defined(__riscv)
 
 /*
- * Tested on highfive1
- *
- * Stable results are achieved operating in the
- * two high speed modes of the highfive1.  It
- * seems to be less reliable in slow mode.
- */
+    Tested on highfive1
+
+    Stable results are achieved operating in the
+    two high speed modes of the highfive1.  It
+    seems to be less reliable in slow mode.
+*/
 #define PIN_TO_BASEREG(pin)             (0)
 #define PIN_TO_BITMASK(pin)             digitalPinToBitMask(pin)
 #define IO_REG_TYPE uint32_t
@@ -327,14 +318,12 @@ void directWriteHigh(volatile IO_REG_TYPE *base, IO_REG_TYPE pin)
 #define IO_REG_MASK_ATTR
 
 static inline __attribute__((always_inline))
-IO_REG_TYPE directRead(IO_REG_TYPE mask)
-{
+IO_REG_TYPE directRead(IO_REG_TYPE mask) {
     return ((GPIO_REG(GPIO_INPUT_VAL) & mask) != 0) ? 1 : 0;
 }
 
 static inline __attribute__((always_inline))
-void directModeInput(IO_REG_TYPE mask)
-{
+void directModeInput(IO_REG_TYPE mask) {
     GPIO_REG(GPIO_OUTPUT_XOR)  &= ~mask;
     GPIO_REG(GPIO_IOF_EN)      &= ~mask;
 
@@ -343,8 +332,7 @@ void directModeInput(IO_REG_TYPE mask)
 }
 
 static inline __attribute__((always_inline))
-void directModeOutput(IO_REG_TYPE mask)
-{
+void directModeOutput(IO_REG_TYPE mask) {
     GPIO_REG(GPIO_OUTPUT_XOR)  &= ~mask;
     GPIO_REG(GPIO_IOF_EN)      &= ~mask;
 
@@ -353,14 +341,12 @@ void directModeOutput(IO_REG_TYPE mask)
 }
 
 static inline __attribute__((always_inline))
-void directWriteLow(IO_REG_TYPE mask)
-{
+void directWriteLow(IO_REG_TYPE mask) {
     GPIO_REG(GPIO_OUTPUT_VAL) &= ~mask;
 }
 
 static inline __attribute__((always_inline))
-void directWriteHigh(IO_REG_TYPE mask)
-{
+void directWriteHigh(IO_REG_TYPE mask) {
     GPIO_REG(GPIO_OUTPUT_VAL) |= mask;
 }
 
