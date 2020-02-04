@@ -1,4 +1,4 @@
-Grove temperature sensor MAX31850K
+Grove temperature sensor MAX31850K  [![Build Status](https://travis-ci.com/Seeed-Studio/Seeed_MAX31850K.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Seeed_MAX31850K)
 =============================================================  
 
 ![MAX31850](https://github.com/linux-downey/Grove_Temperature_sensor_MAX31850K/blob/master/MAX31850K_module.png)  
