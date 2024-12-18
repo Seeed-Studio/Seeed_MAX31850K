@@ -1,6 +1,10 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
+#ifdef USE_TINYUSB
+#include <Adafruit_TinyUSB.h>
+#endif
+
 // Data wire is plugged into port 3 on the Arduino
 #define ONE_WIRE_BUS 3
 

@@ -427,6 +427,7 @@ float DallasTemperature::calculateTemperature(uint8_t* deviceAddress, uint8_t* s
                     return (float)(rawTemperature >> 3) * 0.5;
                     break;
             }
+            return 0; // avoid compiler warning
             break;
         case DS18S20MODEL:
             /*
@@ -449,6 +450,7 @@ float DallasTemperature::calculateTemperature(uint8_t* deviceAddress, uint8_t* s
                     (float)scratchPad[COUNT_PER_C]);
             break;
     }
+    return 0; // avoid compiler warning
 }
 
 // returns temperature in degrees C or DEVICE_DISCONNECTED if the
